@@ -1,0 +1,112 @@
+name: sop
+description: Standard Operating Procedure (SOP) and Software Tutorial template capturing step-by-step UI actions, settings, and troubleshooting.
+version: "1.0"
+vision_prompt: >
+  Examine this software screenshot or application UI carefully:
+  1. Identify the active application window title, workspace tab, open dialogs, and navigation hierarchy.
+  2. Highlight specific UI click actions, menu selections, button presses, and keystrokes.
+  3. Extract exact parameter values, form field inputs, configuration flags, toggles, or code snippets visible.
+  4. Note any warning alerts, error banners, or status indicators.
+  Provide a numbered, technical step summary of on-screen actions and parameter settings configured.
+synthesis_prompt: >
+  Analyze the audio transcript of this software demonstration together with the chronological keyframe descriptions.
+  Reconstruct the exact, reproducible step-by-step procedure demonstrated in the video.
+  Synthesize spoken explanations with on-screen actions.
+
+  Required structure:
+  # {{ title | default('Software Standard Operating Procedure') }}
+
+  ## 1. Executive Summary & Objective
+  High-level overview of what this procedure accomplishes, prerequisites, and target audience.
+
+  ## 2. Prerequisites & Environment
+  - System requirements, required software packages, and environment variables.
+  - Required user permissions, credentials, or starting system state.
+
+  ## 3. Step-by-Step Procedure
+  Detailed procedural steps with exact UI click actions, parameter values, and expected results:
+  ### Step X: [Action Verb + Goal]
+  - **Action**: Exact UI navigation or command executed.
+  - **Parameters**: Settings configured or options selected.
+  - **Expected Result**: Visual confirmation or output produced.
+
+  ## 4. Configuration & Key Settings Matrix
+  Summary table of all key settings, toggles, and options configured during the procedure.
+
+  ## 5. Troubleshooting & Common Pitfalls
+  Known failure modes, error messages, and their documented resolutions.
+
+  ## 6. Verification & Acceptance Criteria
+  Validation checks or tests confirming successful execution.
+sections:
+  - Executive Summary & Objective
+  - Prerequisites & Environment
+  - Step-by-Step Procedure
+  - Configuration & Key Settings Matrix
+  - Troubleshooting & Common Pitfalls
+  - Verification & Acceptance Criteria
+layout_template: >
+  # {{ title | default('Standard Operating Procedure') }}
+
+  ## 1. Executive Summary & Objective
+  {{ overview | default(transcription_text | default('This procedure documents the standard operational workflow demonstrated in the video.')) | markdown_clean }}
+
+  ## 2. Prerequisites & Environment
+  {% if prerequisites %}
+  {% for item in prerequisites %}
+  - {{ item }}
+  {% endfor %}
+  {% else %}
+  - Operating System & execution environment matching demonstration.
+  - Required software tools installed and configured with valid permissions.
+  {% endif %}
+
+  ## 3. Step-by-Step Procedure
+  {% if steps %}
+  {% for step in steps %}
+  ### Step {{ loop.index }}: {{ step.title | default('Procedural Step') }}
+  - **Action**: {{ step.action | default('Execute procedure as demonstrated.') }}
+  {% if step.parameters %}- **Parameters**: {{ step.parameters }}{% endif %}
+  {% if step.result %}- **Expected Result**: {{ step.result }}{% endif %}
+  {% endfor %}
+  {% else %}
+  ### Step 1: Initial System Preparation & Navigation
+  - **Action**: Launch application and verify environment readiness.
+  - **Parameters**: Default configuration.
+  - **Expected Result**: Application interface displays active workspace.
+
+  ### Step 2: Core Procedural Execution
+  - **Action**: Execute operational tasks as demonstrated in video session.
+  - **Parameters**: Specified input parameters and operational flags.
+  - **Expected Result**: Target operation completes successfully.
+  {% endif %}
+
+  {% if visual_summary %}
+  ## Visual Observations
+  {{ visual_summary | markdown_clean }}
+  {% endif %}
+
+  {% if keyframes %}
+  ## Visual Highlights & Keyframes
+  {% for kf in keyframes %}
+  ### Visual Check at {{ kf.timestamp | format_timestamp }}
+  ![Keyframe at {{ kf.timestamp | format_timestamp }}]({{ kf.path | default(kf.relative_image_path | default('')) }})
+  - **Observation**: {{ kf.description | default(kf.visual_description | default('Active interface state')) }}
+  {% endfor %}
+  {% endif %}
+
+  ## 4. Configuration & Key Settings Matrix
+  | Setting / Option | Configured Value | Description / Scope |
+  | :--- | :--- | :--- |
+  | Target Environment | Production / Staging | Execution context for operational procedure |
+  | Log Level | Standard / Verbose | Diagnostic capture mode |
+
+  ## 5. Troubleshooting & Common Pitfalls
+  - **Issue**: Environment dependencies missing or version mismatch.
+    - **Remediation**: Verify prerequisite software versions prior to execution.
+  - **Issue**: Permission denied or invalid authentication credentials.
+    - **Remediation**: Confirm administrative privileges and validate session tokens.
+
+  ## 6. Verification & Acceptance Criteria
+  - [x] All procedural steps executed without runtime errors or unhandled exceptions.
+  - [x] Operational state matches expected target output criteria.

@@ -1,0 +1,100 @@
+name: lecture
+description: Academic Lecture and Research Notes template with theoretical foundations, mathematical derivations, LaTeX formulas, and citations.
+version: "1.0"
+vision_prompt: >
+  Analyze this academic presentation slide or whiteboard visual capture:
+  1. Transcribe all mathematical formulas, equations, matrices, and symbols into valid LaTeX notation ($...$ or $$...$$).
+  2. Extract slide titles, research topic headings, bulleted concepts, and author citations.
+  3. Detail any architectural diagrams, algorithmic flowcharts, data graphs, or empirical benchmark plots (axes, legends, labels, trends).
+  Provide a rigorous academic summary of visual and conceptual lecture elements.
+synthesis_prompt: >
+  Analyze the audio lecture transcript alongside the slide/whiteboard visual captures.
+  Synthesize a publication-grade academic lecture notes document.
+  Ensure theoretical rigor: define notation, state theorems, explain proofs and derivations, and capture spoken conceptual insights.
+
+  Required structure:
+  # {{ title | default('Academic Lecture & Research Notes') }}
+
+  ## 1. Abstract & Learning Objectives
+  Formal academic abstract summarizing the central thesis, methodology, and theoretical scope of the lecture.
+
+  ## 2. Theoretical Foundations & Mathematical Notation
+  - Define all specialized terms, mathematical notation, and theoretical frameworks introduced.
+
+  ## 3. Mathematical Derivations & Formulas
+  Detailed step-by-step mathematical derivations. Express all equations in LaTeX notation:
+  $$ ... $$
+
+  ## 4. Methodological Architecture & Algorithmic Paradigms
+  - Architectural models, algorithmic workflows, and empirical experiment designs.
+
+  ## 5. Empirical Results, Benchmarks & Case Studies
+  - Quantitative metrics, benchmark evaluations, ablation studies, and findings.
+
+  ## 6. Lecture Summary & Open Research Questions
+  - Key takeaways, theoretical caveats, and review questions for students.
+
+  ## 7. Citations & Further Reading
+  - Academic papers, textbooks, and primary literature referenced.
+sections:
+  - Abstract & Learning Objectives
+  - Theoretical Foundations & Mathematical Notation
+  - Mathematical Derivations & Formulas
+  - Methodological Architecture & Algorithmic Paradigms
+  - Empirical Results, Benchmarks & Case Studies
+  - Lecture Summary & Open Research Questions
+  - Citations & Further Reading
+layout_template: >
+  # {{ title | default('Academic Lecture & Research Notes') }}
+
+  ## 1. Abstract & Learning Objectives
+  {{ abstract | default(transcription_text | default('This lecture presents core theoretical frameworks, formal derivations, and empirical methodologies.')) | markdown_clean }}
+
+  ## 2. Theoretical Foundations & Mathematical Notation
+  {% if concepts %}
+  {% for concept in concepts %}
+  - **{{ concept.name }}**: {{ concept.description }}
+  {% endfor %}
+  {% else %}
+  - **Primary Hypothesis**: Foundational theoretical axioms governing the lecture domain.
+  - **Mathematical Notation**: Standard formal symbols and operational representations.
+  {% endif %}
+
+  ## 3. Mathematical Derivations & Formulas
+  {% if formulas %}
+  {% for f in formulas %}
+  $$ {{ f }} $$
+  {% endfor %}
+  {% else %}
+  $$ \mathcal{L}(\theta) = \mathbb{E}_{x \sim p_{data}} [-\log p_\theta(x)] $$
+  The objective function formalizes the optimization criterion over parameter space $\theta$.
+  {% endif %}
+
+  {% if visual_summary %}
+  ## Visual Slide Analysis
+  {{ visual_summary | markdown_clean }}
+  {% endif %}
+
+  {% if keyframes %}
+  ## Lecture Visuals & Presentation Slides
+  {% for kf in keyframes %}
+  ### Slide at {{ kf.timestamp | format_timestamp }}
+  ![Slide at {{ kf.timestamp | format_timestamp }}]({{ kf.path | default(kf.relative_image_path | default('')) }})
+  - **Content**: {{ kf.description | default(kf.visual_description | default('Slide visual')) }}
+  {% endfor %}
+  {% endif %}
+
+  ## 4. Methodological Architecture & Algorithmic Paradigms
+  - Systematic decomposition of presented analytical and computational pipelines.
+  - Step-by-step invariant validation across algorithm phases.
+
+  ## 5. Empirical Results, Benchmarks & Case Studies
+  - Evaluation on benchmark datasets and comparative performance analysis.
+  - Empirical convergence observations and ablation findings.
+
+  ## 6. Lecture Summary & Open Research Questions
+  - **Key Takeaway**: Theoretical foundations unified with algorithmic formulation.
+  - **Open Question**: Scalability under non-stationary distributions and boundary constraints.
+
+  ## 7. Citations & Further Reading
+  - Primary literature, seminar references, and foundational textbooks cited.

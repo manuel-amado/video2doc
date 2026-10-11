@@ -1,0 +1,105 @@
+# ==============================================================================
+# Video2Doc Git Hygiene & Privacy Guard
+# ==============================================================================
+
+# 1. Proprietary Course Transcripts & Personal Notes (CRITICAL)
+manuales_sqx/
+manuales_sqx_futuros/
+*sqx*
+*SQX*
+*Build Alpha*
+*.course
+*.transcript.txt
+
+# 2. Multi-Agent & Orchestration Metadata
+.agents/
+
+# 3. Media & Video Files (Large Binaries)
+*.mp4
+*.mkv
+*.mov
+*.avi
+*.wmv
+*.flv
+*.webm
+*.m4v
+*.ts
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.gif
+
+# 4. Audio Extraction Intermediates
+*.wav
+*.mp3
+*.m4a
+*.aac
+*.flac
+*.ogg
+
+# 5. Pipeline Output, Temporary Frame Dirs & Caches
+output/
+*frames*/
+temp_frames/
+sqx_frames_*/
+tmp/
+.cache/
+
+# 6. Local AI & Environment Secrets
+.env
+.env.*
+!.env.example
+ollama_data/
+*.log
+
+# 7. Python & Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 8. Testing, Coverage & Type Checking
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# 9. Operating System & IDE Metadata
+desktop.ini
+Thumbs.db
+.DS_Store
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# 10. Legacy scripts & Agent task metadata
+process_videos.py
+*.ps1
+ORIGINAL_REQUEST.md
+TEST_INFRA.md
+TEST_READY.md
+

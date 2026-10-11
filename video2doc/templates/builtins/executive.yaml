@@ -1,0 +1,107 @@
+name: executive
+description: Executive Summary and Action Items template with strategic decision records, KPI matrices, and ownership registers.
+version: "1.0"
+vision_prompt: >
+  Examine this business presentation slide, roadmap, or executive dashboard capture:
+  1. Identify high-level executive KPIs, financial metrics, scorecard values, and performance trends.
+  2. Extract strategic decisions, timeline milestones, organizational charts, and strategic deliverables.
+  3. Note tables, summary charts, blocker risks, and ownership assignments.
+  Provide a concise, authoritative briefing of business observations and metrics.
+synthesis_prompt: >
+  Distill the provided audio transcript and presentation slides into an executive briefing document.
+  Be concise, authoritative, and outcome-oriented. Eliminate conversational filler.
+  Focus on strategic decisions, ownership, deadlines, and quantitative impact.
+
+  Required structure:
+  # {{ title | default('Executive Briefing & Decision Log') }}
+
+  ## 1. Executive Summary & Strategic Context
+  High-level 3-5 sentence briefing summarizing the meeting purpose, current state, and strategic posture.
+
+  ## 2. Key Strategic Decisions Made
+  Itemized list of strategic decisions approved during the session, including rationale and business impact.
+
+  ## 3. Action Items & Ownership Register
+  Structured table identifying action items, designated owners, completion milestones, and priority levels.
+
+  ## 4. Metric & KPI Performance Matrix
+  Quantitative indicators, financial metrics, growth projections, or operational KPIs reviewed.
+
+  ## 5. Strategic Risks, Blockers & Mitigations
+  Identified operational or market risks, severity ratings, and mitigation measures.
+
+  ## 6. Next Steps & Cadence
+  Subsequent review milestones, immediate deliverables, and cadence check-ins.
+sections:
+  - Executive Summary & Strategic Context
+  - Key Strategic Decisions Made
+  - Action Items & Ownership Register
+  - Metric & KPI Performance Matrix
+  - Strategic Risks, Blockers & Mitigations
+  - Next Steps & Cadence
+layout_template: >
+  # {{ title | default('Executive Briefing & Decision Log') }}
+
+  ## 1. Executive Summary & Strategic Context
+  {{ summary | default(transcription_text | default('Executive review summarizing strategic objectives, operational metrics, and governance decisions.')) | markdown_clean }}
+
+  ## 2. Key Strategic Decisions Made
+  {% if decisions %}
+  {% for d in decisions %}
+  - **Decision {{ loop.index }}**: {{ d.title | default(d) }}
+    - *Rationale & Impact*: {{ d.rationale | default('Approved strategic direction.') }}
+  {% endfor %}
+  {% else %}
+  - **Decision 1**: Alignment on operational roadmap and delivery priorities.
+    - *Rationale & Impact*: Accelerates cross-functional execution and de-risks key milestones.
+  - **Decision 2**: Resource allocation approved for target deliverables.
+    - *Rationale & Impact*: Ensures dedicated ownership and capacity for execution.
+  {% endif %}
+
+  ## 3. Action Items & Ownership Register
+  | Action Item / Deliverable | Owner | Target Completion | Priority |
+  | :--- | :--- | :--- | :--- |
+  {% if action_items %}
+  {% for item in action_items %}
+  | {{ item.task | default(item.title | default(item)) }} | {{ item.owner | default('Unassigned') }} | {{ item.due | default('TBD') }} | {{ item.priority | default('High') }} |
+  {% endfor %}
+  {% else %}
+  | Finalize operational readiness plan | Strategic Lead | Next Cadence | High |
+  | Track KPI metrics and variance reporting | Operations Team | Bi-weekly | Medium |
+  {% endif %}
+
+  ## 4. Metric & KPI Performance Matrix
+  {% if kpis %}
+  | Indicator / Metric | Target | Actual / Status | Variance |
+  | :--- | :--- | :--- | :--- |
+  {% for k in kpis %}
+  | {{ k.name }} | {{ k.target }} | {{ k.actual }} | {{ k.variance | default('On Track') }} |
+  {% endfor %}
+  {% else %}
+  | Indicator / Metric | Target | Current Status | Notes |
+  | :--- | :--- | :--- | :--- |
+  | Operational SLA | 99.9% | Met | Core workflows stable |
+  | Delivery Velocity | 100% | On Track | Milestones progressing to schedule |
+  {% endif %}
+
+  {% if visual_summary %}
+  ## Strategic Dashboard & Visual Analysis
+  {{ visual_summary | markdown_clean }}
+  {% endif %}
+
+  {% if keyframes %}
+  ## Meeting Slides & Visual Artifacts
+  {% for kf in keyframes %}
+  ### Slide at {{ kf.timestamp | format_timestamp }}
+  ![Slide at {{ kf.timestamp | format_timestamp }}]({{ kf.path | default(kf.relative_image_path | default('')) }})
+  - **Key Note**: {{ kf.description | default(kf.visual_description | default('Executive slide review')) }}
+  {% endfor %}
+  {% endif %}
+
+  ## 5. Strategic Risks, Blockers & Mitigations
+  - **Risk**: Schedule contention across shared dependencies.
+    - *Mitigation*: Established proactive escalation paths and bi-weekly synchronization.
+
+  ## 6. Next Steps & Cadence
+  - **Review Cadence**: Ongoing governance sync.
+  - **Immediate Next Step**: Distribute action item register to assigned owners for sign-off.
